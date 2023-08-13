@@ -10,7 +10,7 @@ const MealItemForm = (props) => (
         min: '1',
         max: '5',
         type: 'number',
-        id: 'amount',
+        id: 'amount_'+ props.id,
       }}
     />
     <button>+ Add</button>
