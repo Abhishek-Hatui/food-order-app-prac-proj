@@ -3,12 +3,12 @@ import { Fragment } from 'react';
 import mealImg from '../../assests/meals.jpg';
 import HeaderCartButton from './HeaderCartButton';
 
-const Header = () => {
+const Header = (props) => {
     return(
         <Fragment>
             <header className={classses.header}>
                 <h1>Foodu</h1>
-                <HeaderCartButton />
+                <HeaderCartButton  show={props.show}/>
             </header>
             <div className={classses['main-image']}>
                 <img src={mealImg} alt='tasty food'/>
