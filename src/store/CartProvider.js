@@ -7,6 +7,9 @@ const defaultState = {
 };
 
 const cartReducer = (state, action) => {
+  if(action.type === 'RESET'){
+    return defaultState;
+  }
   if (action.type === 'ADD') {
     const updatedTotalAmount =
       state.totalAmount + action.item.price * action.item.amount;
@@ -62,11 +65,16 @@ const CartProvider = (props) => {
     dispatchCartAction({ type: 'REMOVE', id: id });
   };
 
+  const reset = () => {
+    dispatchCartAction({type: 'RESET'});
+  }
+
   const cartContext = {
     totalAmount: cartState.totalAmount,
     items: cartState.items,
     addItem: addItemHandler,
     removeItem: removeItemHandler,
+    reset
   };
 
   return (

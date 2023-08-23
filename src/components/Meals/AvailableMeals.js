@@ -1,36 +1,56 @@
 import classes from './AvailableMeals.module.css';
 import Card from '../UI/Card';
 import MealItem from '../Meals/MealItem/MealItem';
-
-const DUMMY_MEALS = [
-  {
-    id: 'm1',
-    name: 'Sushi',
-    description: 'Finest fish and veggies',
-    price: 22.99,
-  },
-  {
-    id: 'm2',
-    name: 'Schnitzel',
-    description: 'A german specialty!',
-    price: 16.5,
-  },
-  {
-    id: 'm3',
-    name: 'Barbecue Burger',
-    description: 'American, raw, meaty',
-    price: 12.99,
-  },
-  {
-    id: 'm4',
-    name: 'Green Bowl',
-    description: 'Healthy...and green...',
-    price: 18.99,
-  },
-];
+import { useEffect, useState } from 'react';
 
 const AvailableMeals = () => {
-  const mealsList = DUMMY_MEALS.map((meal) => (
+  const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError,setHttpError] = useState(null);
+  useEffect(() => {
+    const fetchVal = async () => {
+      const response = await fetch(
+        'https://custom-hook-prac-c7cf8-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json'
+      );
+
+      if(!response.ok){
+        throw new Error('Something Went Wrong');
+      }
+
+      const data = await response.json();
+      setMeals(data);
+      setIsLoading(false);
+    };
+
+    fetchVal().catch(error=>{
+      setIsLoading(false);
+      setHttpError(error.message);
+    });
+  }, []);
+
+  if(isLoading){
+    return <section className={classes.MealsLoading}>
+      <p>Loading...</p>
+    </section>
+  }
+
+  if(httpError){
+    return <section className={classes.MealsError}>
+    <p>{httpError}</p>
+  </section>
+  }
+
+  const mealArray = [];
+  for (const key in meals) {
+    mealArray.push({
+      id: key,
+      name: meals[key].name,
+      description: meals[key].description,
+      price: meals[key].price,
+    });
+  }
+
+  const mealsList = mealArray.map((meal) => (
     <MealItem
       id={meal.id}
       key={meal.id}
